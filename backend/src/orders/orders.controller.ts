@@ -15,8 +15,18 @@ export class OrdersController {
     return this.ordersService.findHighValueCentral();
   }
 
+  @Get('central-high-fee')
+  async getHighValueCentral() {
+    return this.ordersService.findHighValueCentral();
+  }
+
   @Get('track/:id')
-  trackOrder(@Param('id') id: string) {
+  async trackOrder(@Param('id') id: string) {
     return this.ordersService.trackOrder(id);
+  }
+
+  @Get('failed-count-2025')
+  async getFailedCount() {
+    return this.ordersService.countFailedOrders2025();
   }
 }
