@@ -41,7 +41,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-10 animate-in fade-in duration-700">
       {/* Operational Hub Overview */}
-      <section className="relative overflow-hidden bg-midnight-purple text-white p-12 rounded-[3.5rem] shadow-2xl">
+      <section className="relative overflow-hidden bg-primary-container text-white p-12 rounded-[3.5rem] shadow-2xl">
         <div className="absolute top-0 right-0 p-24 opacity-10 pointer-events-none">
           <Activity size={300} strokeWidth={1} />
         </div>
@@ -53,20 +53,25 @@ export default function Dashboard() {
           <div className="grid md:grid-cols-2 gap-12 items-end">
             <div className="space-y-4">
               <h1 className="text-6xl font-manrope font-black tracking-tighter leading-none">
-                Trung tâm <br/><span className="text-starlight-gold">Điều hành Toàn quốc</span>
+                Trung tâm <br/><span className="text-energy-orange animate-pulse">Điều hành Toàn quốc</span>
               </h1>
-              <p className="text-lg text-white/60 font-bold max-w-md">
-                Theo dõi thời gian thực dữ liệu từ các Node miền Bắc, Trung và Nam qua SQL Server Distributed Gateway.
+              <p className="text-lg text-white/60 font-medium max-w-md">
+                Hệ thống Quản trị Phân tán Gateway Hub Nam - Tự động định tuyến truy vấn xuyên suốt 3 Node Miền Bắc, Miền Trung và Miền Nam.
               </p>
             </div>
-            <div className="flex gap-6">
-              <div className="bg-white/5 p-6 rounded-3xl border border-white/10 backdrop-blur-sm">
-                <div className="text-[10px] font-black uppercase text-white/40 tracking-widest mb-1">Status</div>
+            <div className="flex gap-4">
+              <div className="bg-white/5 p-6 rounded-[2rem] border border-white/10 backdrop-blur-md hover:bg-white/10 transition-all cursor-help group/node">
+                <div className="flex items-center gap-2 mb-2">
+                   <div className="w-2 h-2 bg-emerald-400 rounded-full animate-ping"></div>
+                   <div className="text-[10px] font-black uppercase text-white/40 tracking-widest">Gateway Status</div>
+                </div>
                 <div className="text-xl font-black text-emerald-400">OPERATIONAL</div>
               </div>
-              <div className="bg-white/5 p-6 rounded-3xl border border-white/10 backdrop-blur-sm">
-                <div className="text-[10px] font-black uppercase text-white/40 tracking-widest mb-1">Active Nodes</div>
-                <div className="text-xl font-black text-white">03 SITE</div>
+              <div className="bg-white/5 p-6 rounded-[2rem] border border-white/10 backdrop-blur-md hover:bg-white/10 transition-all cursor-help">
+                <div className="text-[10px] font-black uppercase text-white/40 tracking-widest mb-2">Active Nodes</div>
+                <div className="text-xl font-black text-white flex items-center gap-2">
+                   03 <span className="text-xs text-white/40 font-bold uppercase tracking-widest">Master/Site</span>
+                </div>
               </div>
             </div>
           </div>
@@ -99,8 +104,13 @@ export default function Dashboard() {
               </div>
             ))}
           </div>
-          <div className="mt-5 flex justify-between text-[11px] font-black uppercase text-slate-700 tracking-widest">
-            {revenues.map((reg: any) => <span key={reg.KhuVuc}>{reg.KhuVuc}</span>)}
+          <div className="mt-5 flex justify-between text-[11px] font-black uppercase text-slate-700 tracking-widest opacity-60">
+            {revenues.map((reg: any) => (
+              <span key={reg.KhuVuc} className="flex items-center gap-1.5">
+                <div className={`w-1.5 h-1.5 rounded-full ${reg.KhuVuc === 'Miền Bắc' ? 'bg-primary' : reg.KhuVuc === 'Miền Trung' ? 'bg-amber-500' : 'bg-emerald-500'}`}></div>
+                {reg.KhuVuc}
+              </span>
+            ))}
           </div>
         </div>
 
@@ -122,16 +132,19 @@ export default function Dashboard() {
 
         {/* Yêu cầu 7: Hàm đếm đơn hàng thất bại 2025 */}
         <div className="bg-red-50 p-10 rounded-[3rem] border-2 border-red-100 shadow-2xl shadow-red-200/20 group">
-          <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center text-red-600 mb-8 group-hover:animate-shake">
+          <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center text-red-600 mb-8 group-hover:rotate-12 transition-transform">
             <AlertCircle size={32} />
           </div>
-          <p className="text-red-900/60 font-extrabold uppercase tracking-[0.2em] text-[10px]">Thất bại 2025 (fn_Count)</p>
+          <div className="flex items-center gap-2 mb-1">
+             <p className="text-red-900/60 font-extrabold uppercase tracking-[0.2em] text-[10px]">Thất bại 2025</p>
+             <span className="text-[8px] bg-red-600 text-white px-2 py-0.5 rounded-full font-black animate-pulse">AGGR CMD</span>
+          </div>
           <div className="flex items-baseline gap-2 mt-1">
             <h3 className="text-5xl font-manrope font-black text-red-600 tracking-tighter">{stats?.totalFailed2025 || 0}</h3>
             <span className="text-red-900/60 font-black text-sm uppercase">kiện</span>
           </div>
           <div className="mt-10 pt-10 border-t border-red-200 flex items-center justify-between cursor-pointer group-hover:translate-x-2 transition-transform">
-            <span className="text-xs font-black text-red-900 uppercase tracking-widest">Xem rủi ro Site</span>
+            <span className="text-xs font-black text-red-900 uppercase tracking-widest">Dữ liệu phân mảnh dọc</span>
             <ChevronRight size={18} className="text-red-600" />
           </div>
         </div>
@@ -157,7 +170,7 @@ export default function Dashboard() {
              </div>
           </div>
         </div>
-        <div className="bg-midnight-purple p-12 rounded-[3.5rem] text-white flex flex-col justify-between shadow-2xl relative overflow-hidden group">
+        <div className="bg-primary-container p-12 rounded-[3.5rem] text-white flex flex-col justify-between shadow-2xl relative overflow-hidden group">
            <div className="absolute -bottom-10 -right-10 opacity-5 pointer-events-none group-hover:scale-110 transition-transform">
              <Globe size={300} />
            </div>

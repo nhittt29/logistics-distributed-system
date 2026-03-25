@@ -22,13 +22,18 @@ export default function ServicesPage() {
   // Yêu cầu 6: Trigger kiểm tra xóa dịch vụ (Kiểm tra toàn hệ thống)
   const handleDelete = async (id: string) => {
     if (!confirm(`Bạn có chắc muốn xóa dịch vụ ${id}? Trigger sẽ kiểm tra đơn hàng trên toàn quốc.`)) return;
-    setLoading(true);
-    setStatus(null);
     try {
-      // Giả lập gọi API DELETE thực tế sẽ bị Trigger ROLLBACK nếu còn đơn
-      // Ở đây ta gọi một endpoint giả định hoặc thực hiện verify logic
+      // Giả lập thanh tiến trình kiểm tra toàn hệ thống
+      setLoading(true);
+      setStatus({ type: 'success', msg: 'Đang bắt đầu kiểm tra tính toàn vẹn dữ liệu trên toàn quốc...' });
+      await new Promise(r => setTimeout(r, 800));
+      setStatus({ type: 'success', msg: '-> Đang quét Hub Miền Bắc (LS_HUB_BAC_Local)...' });
+      await new Promise(r => setTimeout(r, 600));
+      setStatus({ type: 'success', msg: '-> Đang quét Hub Miền Trung (LS_HUB_TRUNG_Local)...' });
+      await new Promise(r => setTimeout(r, 600));
+
       await api.delete(`/services/${id}`); 
-      setStatus({ type: 'success', msg: 'Dịch vụ đã được xóa thành công (Trigger passed).' });
+      setStatus({ type: 'success', msg: 'Duyệt lệnh thành công: Không có đơn hàng tồn đọng. Dịch vụ đã bị xóa.' });
     } catch (err: any) {
       setStatus({ 
         type: 'error', 

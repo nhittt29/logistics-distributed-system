@@ -47,7 +47,9 @@ export default function TrackingPage() {
     <div className="max-w-4xl mx-auto space-y-10 animate-in fade-in duration-700">
       <div className="text-center space-y-4">
         <h3 className="text-5xl font-manrope font-black tracking-tighter text-slate-900">Tính năng Express Track</h3>
-        <p className="text-slate-500 font-medium">Yêu cầu 3: Thực thi usp_TraCuuVanDon xuyên suốt hệ thống 3 miền.</p>
+        <p className="text-slate-500 font-extrabold uppercase tracking-widest text-[10px] mt-2">
+          <span className="text-primary">Global Search</span> • SQL Gateway Routing Protocol
+        </p>
       </div>
 
       <section className="bg-white p-2 rounded-[3rem] border-2 border-slate-50 shadow-2xl shadow-slate-200/40">

@@ -47,7 +47,7 @@ const config: Config = {
         "on-secondary-fixed": "#071e27",
         "tertiary-fixed": "#ffdbcb",
         "error-container": "#ffdad6",
-        "primary-container": "#2E1A47",
+        "primary-container": "#1a237e",
         "tertiary-container": "#542000",
         "secondary-container": "#cfe6f2",
         "on-background": "#1b1b21",

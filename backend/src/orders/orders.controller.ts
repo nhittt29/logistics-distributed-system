@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Param } from '@nestjs/common';
+import { Controller, Get, Query, Param, Post, Body, Patch, Delete } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 
 @Controller('orders')
@@ -28,5 +28,25 @@ export class OrdersController {
   @Get('failed-count-2025')
   async getFailedCount() {
     return this.ordersService.countFailedOrders2025();
+  }
+
+  @Get('stats')
+  async getStats() {
+    return this.ordersService.getGlobalStats();
+  }
+
+  @Post()
+  async create(@Body() data: any) {
+    return this.ordersService.create(data);
+  }
+
+  @Patch(':id')
+  async update(@Param('id') id: string, @Body() data: any) {
+    return this.ordersService.update(id, data);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    return this.ordersService.remove(id);
   }
 }

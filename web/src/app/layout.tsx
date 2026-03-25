@@ -17,11 +17,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${manrope.variable}`}>
+    <html lang="en" className={`${inter.variable} ${manrope.variable}`} suppressHydrationWarning>
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-inter bg-background text-on-background min-h-screen">
+      <body className="font-inter bg-background text-on-background min-h-screen" suppressHydrationWarning>
         <Providers>
           <MainLayout>{children}</MainLayout>
         </Providers>

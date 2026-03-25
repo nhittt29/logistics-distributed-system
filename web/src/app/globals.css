@@ -16,3 +16,15 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-manrope), sans-serif;
 }
+
+.bg-primary-gradient {
+  background: linear-gradient(135deg, #000666 0%, #1a237e 100%) !important;
+}
+
+.bg-energy-orange {
+  background-color: #ff6f00 !important;
+}
+
+.text-energy-orange {
+  color: #ff6f00 !important;
+}

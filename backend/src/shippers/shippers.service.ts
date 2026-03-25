@@ -17,16 +17,22 @@ export class ShippersService {
 
   async findAllByRegion(region: 'BAC' | 'TRUNG' | 'NAM'): Promise<any[]> {
     if (region === 'NAM') {
-      const query = `SELECT MaNV, HoTen, ChucVu, MaBC FROM NhanVien`;
+      const query = `SELECT MaNV, HoTen, ChucVu, MaBC FROM NhanVien_Phan1`;
       return this.dataSource.query(query);
     }
 
-    const ls = region === 'BAC' ? 'LS_HUB_BAC_Local' : 'LS_HUB_TRUNG_Local';
-    const db = region === 'BAC' ? 'Logistics_MienBac' : 'Logistics_MienTrung';
+    // Với miền Bắc, ta dùng View riêng đã định nghĩa để lọc Shipper
+    if (region === 'BAC') {
+      return this.getNorthShippers();
+    }
+
+    // Với miền Trung, lấy toàn bộ nhân sự
+    const ls = 'LS_HUB_TRUNG_Local';
+    const db = 'Logistics_MienTrung';
     
     const remoteQuery = `
       SELECT MaNV, HoTen, ChucVu, MaBC
-      FROM [${ls}].[${db}].[dbo].[NhanVien]
+      FROM [${ls}].[${db}].[dbo].[NhanVien_Phan1]
     `;
     
     return this.dataSource.query(remoteQuery);
@@ -39,32 +45,34 @@ export class ShippersService {
     return result ? result[0] : null;
   }
 
-  // Yêu cầu 5: Thống kê doanh thu toàn hệ thống
+  // Yêu cầu 5 & 7: Thống kê doanh thu và đơn thất bại thông qua SP Gateway
   async getGlobalStats(): Promise<any> {
-    const query = `
-      SELECT N'Miền Bắc' AS KhuVuc, ISNULL(SUM(CuocPhi), 0) AS DoanhThu FROM [LS_HUB_BAC_Local].[Logistics_MienBac].[dbo].[DonHang]
-      UNION ALL
-      SELECT N'Miền Trung', ISNULL(SUM(CuocPhi), 0) FROM [LS_HUB_TRUNG_Local].[Logistics_MienTrung].[dbo].[DonHang]
-      UNION ALL
-      SELECT N'Miền Nam', ISNULL(SUM(CuocPhi), 0) FROM [Logistics_MienNam].[dbo].[DonHang]
-    `;
-    const revenues = await this.dataSource.query(query);
-    
-    // Yêu cầu 7: Tích hợp đếm đơn thất bại qua Function (Aggregator)
     try {
-      const failedQuery = `SELECT [Logistics_MienNam].[dbo].fn_DemDonThatBai_2025() as TotalFailed`;
-      const failedResult = await this.dataSource.query(failedQuery);
+      // Gọi SP Thống kê doanh thu
+      const revResult = await this.dataSource.query('EXEC usp_ThongKeDoanhThu');
+      const row = revResult[0] || { Nam: 0, Bac: 0, Trung: 0 };
+      
+      const revenues = [
+        { KhuVuc: 'Miền Bắc', DoanhThu: row.Bac },
+        { KhuVuc: 'Miền Trung', DoanhThu: row.Trung },
+        { KhuVuc: 'Miền Nam', DoanhThu: row.Nam },
+      ];
+
+      // Gọi SP Đếm đơn thất bại
+      const failedResult = await this.dataSource.query('EXEC usp_DemDonThatBai_2025');
+      const totalFailed2025 = failedResult[0]?.TotalFailed || 0;
+
       return {
         revenues,
-        totalFailed2025: failedResult[0]?.TotalFailed || 0,
-        totalOrders: 1248
+        totalFailed2025,
+        totalOrders: 1248 // Số liệu demo cố định hoặc có thể đếm thêm từ các site
       };
     } catch (e) {
-      console.error('Aggregator Function error:', e.message);
+      console.error('Global Stats Error:', e.message);
       return {
-        revenues,
+        revenues: [],
         totalFailed2025: 0,
-        totalOrders: 1248
+        totalOrders: 0
       };
     }
   }

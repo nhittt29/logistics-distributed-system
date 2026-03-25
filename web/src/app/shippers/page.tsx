@@ -68,13 +68,13 @@ export default function ShippersPage() {
         <div className="flex bg-slate-100 p-1.5 rounded-[1.5rem] border-2 border-white shadow-xl">
           <button 
             onClick={() => setActiveTab('shippers')}
-            className={`px-10 py-3.5 text-xs font-black rounded-2xl transition-all ${activeTab === 'shippers' ? 'bg-midnight-purple text-white shadow-lg' : 'text-slate-500 hover:text-midnight-purple'}`}
+            className={`px-10 py-3.5 text-xs font-black rounded-2xl transition-all ${activeTab === 'shippers' ? 'bg-primary-container text-white shadow-lg' : 'text-slate-500 hover:text-primary-container'}`}
           >
             Danh sách Shipper
           </button>
           <button 
             onClick={() => setActiveTab('income')}
-            className={`px-10 py-3.5 text-xs font-black rounded-2xl transition-all ${activeTab === 'income' ? 'bg-midnight-purple text-white shadow-lg' : 'text-slate-500 hover:text-midnight-purple'}`}
+            className={`px-10 py-3.5 text-xs font-black rounded-2xl transition-all ${activeTab === 'income' ? 'bg-primary-container text-white shadow-lg' : 'text-slate-500 hover:text-primary-container'}`}
           >
             Tra cứu Thu nhập (Req 4)
           </button>
@@ -88,7 +88,7 @@ export default function ShippersPage() {
               <button 
                 key={r}
                 onClick={() => setRegion(r as any)}
-                className={`px-8 py-3 text-[10px] font-black rounded-2xl transition-all duration-300 ${region === r ? 'bg-midnight-purple text-white shadow-md' : 'text-slate-500 hover:text-slate-700'}`}
+                className={`px-8 py-3 text-[10px] font-black rounded-2xl transition-all duration-300 ${region === r ? 'bg-primary-container text-white shadow-md' : 'text-slate-500 hover:text-slate-700'}`}
               >
                HUB {r === 'BAC' ? 'MIỀN BẮC (View)' : r === 'TRUNG' ? 'MIỀN TRUNG' : 'MIỀN NAM'}
               </button>
@@ -121,13 +121,14 @@ export default function ShippersPage() {
                       <th className="px-12 py-8">Mã nhân viên</th>
                       <th className="px-12 py-8">Họ Tên</th>
                       <th className="px-12 py-8">Chức Vụ</th>
-                      <th className="px-12 py-8">Mã Bưu Cục</th>
+                      <th className="px-12 py-8">{region === 'BAC' ? 'Bưu Cục' : 'Mã Bưu Cục'}</th>
+                      {region === 'BAC' && <th className="px-12 py-8">Địa Chỉ</th>}
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {shippers.map((s) => (
                       <tr key={s.MaNV} className="hover:bg-slate-50 transition-colors border-b border-slate-100">
-                        <td className="px-12 py-6 font-black text-midnight-purple-light">{s.MaNV}</td>
+                        <td className="px-12 py-6 font-black text-primary-container">{s.MaNV}</td>
                         <td className="px-12 py-6 font-black text-slate-900">{s.HoTen}</td>
                         <td className="px-12 py-6">
                           <span className="px-4 py-1.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm">
@@ -136,9 +137,14 @@ export default function ShippersPage() {
                         </td>
                         <td className="px-12 py-6 font-black text-slate-800">
                           <div className="flex items-center gap-2">
-                            <MapPin size={14} className="text-midnight-purple" /> {s.MaBC}
+                            <MapPin size={14} className="text-primary-container" /> {region === 'BAC' ? s.TenBC : s.MaBC}
                           </div>
                         </td>
+                        {region === 'BAC' && (
+                          <td className="px-12 py-6 font-black text-slate-800">
+                            {s.DiaChi}
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>
@@ -161,7 +167,7 @@ export default function ShippersPage() {
                   value={maNV}
                   onChange={(e) => setMaNV(e.target.value)}
                   placeholder="Nhập ID NV (VD: NVB01, NVB02)..." 
-                  className="w-full pl-22 pr-8 py-8 bg-slate-50/50 border-2 border-transparent focus:border-primary focus:bg-white rounded-[2.5rem] text-2xl font-black placeholder:text-slate-200 transition-all focus:outline-none"
+                  className="w-full pl-16 pr-8 py-8 bg-slate-50/50 border-2 border-transparent focus:border-primary focus:bg-white rounded-[2.5rem] text-2xl font-black placeholder:text-slate-200 transition-all focus:outline-none"
                 />
               </div>
               <button type="submit" className="px-12 py-8 bg-slate-900 text-white font-black rounded-[2.5rem] shadow-xl hover:-translate-y-1 active:scale-95 transition-all">
@@ -179,12 +185,15 @@ export default function ShippersPage() {
           {shipper && (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 animate-in zoom-in-95 duration-500">
               <div className="lg:col-span-1 bg-white p-12 rounded-[3.5rem] border-2 border-slate-50 shadow-2xl text-center space-y-8">
-                <div className="w-24 h-24 bg-midnight-purple rounded-[2rem] flex items-center justify-center text-white mx-auto shadow-2xl rotate-3">
+                <div className="w-24 h-24 bg-primary-container rounded-[2rem] flex items-center justify-center text-white mx-auto shadow-2xl rotate-3">
                   <User size={48} />
                 </div>
                 <div>
                   <h4 className="text-3xl font-black tracking-tighter">{shipper.HoTen}</h4>
-                  <p className="text-primary font-black text-xs uppercase tracking-[0.4em] mt-2">{shipper.MaNV}</p>
+                  <div className="flex items-center justify-center gap-2 mt-2">
+                    <p className="text-primary font-black text-xs uppercase tracking-[0.4em]">{shipper.MaNV}</p>
+                    <span className="text-[8px] bg-slate-100 text-slate-400 px-2 py-0.5 rounded font-black border border-slate-200 uppercase">NODE_ORIGIN</span>
+                  </div>
                 </div>
                 <div className="pt-8 border-t border-slate-50 text-left space-y-6">
                   <div className="flex justify-between items-center bg-slate-50 p-4 rounded-2xl">
@@ -202,7 +211,7 @@ export default function ShippersPage() {
                     <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center text-slate-900 font-bold">
                        $
                     </div>
-                    <div className="text-xs font-black uppercase tracking-[0.3em] text-white/40">Secure Transaction Hash: LS_NAM_P2</div>
+                    <div className="text-xs font-black uppercase tracking-[0.3em] text-white/40">Secure Source: Master Hub Nam (Phần 2)</div>
                   </div>
                   <div className="space-y-4">
                     <p className="text-xs font-black uppercase text-emerald-400 tracking-[0.3em]">Thu nhập thực nhận</p>

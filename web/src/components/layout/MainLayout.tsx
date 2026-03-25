@@ -38,11 +38,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
   return (
     <div className="flex min-h-screen bg-surface font-inter">
       {/* SideNavBar */}
-      <aside className="fixed left-0 top-0 h-screen w-64 flex flex-col z-50 bg-midnight-purple text-on-primary shadow-2xl overflow-y-auto overflow-x-hidden">
+      <aside className="fixed left-0 top-0 h-screen w-64 flex flex-col z-50 bg-primary-container text-on-primary shadow-2xl overflow-y-auto overflow-x-hidden">
         <div className="px-6 py-8 flex-1">
           <div className="flex items-center gap-3 mb-8 px-2">
-            <div className="w-10 h-10 bg-starlight-gold rounded-lg flex items-center justify-center shadow-lg">
-              <Truck size={24} className="text-midnight-purple" />
+            <div className="w-10 h-10 bg-energy-orange rounded-lg flex items-center justify-center shadow-lg">
+              <Truck size={24} className="text-on-primary" />
             </div>
             <div>
               <h1 className="font-manrope font-extrabold text-lg leading-tight tracking-tight">Logistics Auth</h1>
@@ -50,7 +50,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
             </div>
           </div>
 
-          <button className="w-full py-3 px-4 bg-gradient-to-br from-midnight-purple-light to-midnight-purple text-on-primary border border-white/10 rounded-xl font-bold flex items-center justify-center gap-2 mb-8 shadow-xl hover:scale-[0.98] active:scale-95 transition-all">
+          <button className="w-full py-3 px-4 bg-primary-gradient text-on-primary rounded-xl font-bold flex items-center justify-center gap-2 mb-8 shadow-xl hover:scale-[0.98] active:scale-95 transition-all">
             <Plus size={18} />
              Vận đơn mới
           </button>
@@ -64,11 +64,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   href={item.href}
                   className={`flex items-center gap-3 py-3 px-4 rounded-xl transition-all duration-200 group ${
                     isActive 
-                      ? 'bg-white/10 text-on-primary border-l-4 border-starlight-gold' 
+                      ? 'bg-white/10 text-on-primary border-l-4 border-energy-orange' 
                       : 'text-on-primary/70 hover:bg-white/5 hover:text-on-primary'
                   }`}
                 >
-                  <span className={`${isActive ? 'text-starlight-gold' : 'group-hover:text-starlight-gold transition-colors'}`}>
+                  <span className={`${isActive ? 'text-energy-orange' : 'group-hover:text-energy-orange transition-colors'}`}>
                     {item.icon}
                   </span>
                   <span className="font-semibold text-sm">{item.name}</span>
