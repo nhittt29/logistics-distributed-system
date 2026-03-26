@@ -45,6 +45,7 @@ export class OrdersService {
       JOIN [LS_HUB_TRUNG_Local].[Logistics_MienTrung].[dbo].[BuuCuc] bc ON d.MaBC_HienTai = bc.MaBC
       WHERE d.CuocPhi > 1000000 
       AND CAST(d.NgayGui AS DATE) = CAST(GETDATE() AS DATE)
+      ORDER BY d.CuocPhi DESC
     `;
     return this.dataSource.query(query);
   }
@@ -67,7 +68,10 @@ export class OrdersService {
   async getGlobalStats(): Promise<any> {
     const query = `EXEC usp_ThongKeDoanhThu`;
     const result = await this.dataSource.query(query);
-    return result[0] || { Nam: 0, Bac: 0, Trung: 0 };
+    return result.map((r: any) => ({
+      KhuVuc: r.KhuVuc,
+      DoanhThu: parseInt(r.DoanhThu, 10) || 0
+    }));
   }
 
   // --- MỚI: CRUD VẬN ĐƠN PHÂN TÁN ---

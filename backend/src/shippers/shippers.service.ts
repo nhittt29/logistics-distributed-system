@@ -39,8 +39,16 @@ export class ShippersService {
   }
 
   // Yêu cầu 4: Stored Procedure xem thu nhập nhân viên xuyên Site
+  // Định tuyến EXECute về thẳng Local Hubs để tận dụng SP phân tán
   async getIncome(maNV: string): Promise<any> {
-    const query = `EXEC [Logistics_MienNam].[dbo].[usp_XemThuNhapShipper] @MaNV = '${maNV}'`;
+    let query = '';
+    if (maNV.startsWith('NVB')) {
+      query = `EXEC [LS_HUB_BAC_Local].[Logistics_MienBac].[dbo].[usp_XemThuNhapShipper] @MaNV = '${maNV}'`;
+    } else if (maNV.startsWith('NVT')) {
+      query = `EXEC [LS_HUB_TRUNG_Local].[Logistics_MienTrung].[dbo].[usp_XemThuNhapShipper] @MaNV = '${maNV}'`;
+    } else {
+      query = `EXEC [Logistics_MienNam].[dbo].[usp_XemThuNhapShipper] @MaNV = '${maNV}'`;
+    }
     const result = await this.dataSource.query(query);
     return result ? result[0] : null;
   }
@@ -48,15 +56,13 @@ export class ShippersService {
   // Yêu cầu 5 & 7: Thống kê doanh thu và đơn thất bại thông qua SP Gateway
   async getGlobalStats(): Promise<any> {
     try {
-      // Gọi SP Thống kê doanh thu
+      // Gọi SP Thống kê doanh thu trả thẳng về dạng List [{KhuVuc, DoanhThu}] theo đúng yêu cầu DB
       const revResult = await this.dataSource.query('EXEC usp_ThongKeDoanhThu');
-      const row = revResult[0] || { Nam: 0, Bac: 0, Trung: 0 };
       
-      const revenues = [
-        { KhuVuc: 'Miền Bắc', DoanhThu: row.Bac },
-        { KhuVuc: 'Miền Trung', DoanhThu: row.Trung },
-        { KhuVuc: 'Miền Nam', DoanhThu: row.Nam },
-      ];
+      const revenues = revResult.map((r: any) => ({
+        KhuVuc: r.KhuVuc,
+        DoanhThu: parseInt(r.DoanhThu, 10) || 0
+      }));
 
       // Gọi SP Đếm đơn thất bại
       const failedResult = await this.dataSource.query('EXEC usp_DemDonThatBai_2025');

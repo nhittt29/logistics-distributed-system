@@ -31,10 +31,10 @@ export default function TrackingPage() {
     
     try {
       const response = await api.get(`/orders/track/${maVanDon}`);
-      if (response.data) {
+      if (response.data && response.data.MaVanDon) {
         setResult(response.data);
       } else {
-        setError('Không tìm thấy mã vận đơn trên toàn bộ hệ thống Hub.');
+        setError('Không tìm thấy mã vận đơn trên toàn bộ hệ thống hub.');
       }
     } catch (err) {
       setError('Lỗi SQL Gateway hoặc Linked Server không phản hồi.');
@@ -60,7 +60,7 @@ export default function TrackingPage() {
               type="text" 
               value={maVanDon}
               onChange={(e) => setMaVanDon(e.target.value)}
-              placeholder="Nhập mã vận đơn (VD: MD001)..." 
+              placeholder="Nhập mã vận đơn (VD: VDN001, VDB001)..." 
               className="w-full pl-20 pr-8 py-8 bg-slate-50/50 border-2 border-transparent focus:border-primary focus:bg-white rounded-[2.5rem] text-2xl font-black placeholder:text-slate-200 transition-all focus:outline-none"
             />
           </div>
